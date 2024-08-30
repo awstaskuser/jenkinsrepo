@@ -1,0 +1,36 @@
+pipeline {
+    agent any
+    stages {
+        stage('Clone Repository') {
+            steps {
+                // Clone the GitHub repository
+                git url: 'https://github.com/awstaskuser/jenkinsrepo.git', branch: 'main'
+            }
+        }
+        stage('Create Liferay Web Content') {
+            steps {
+                script {
+                    def liferayUrl = 'http://65.0.20.60:8080'
+                    def liferayUsername = 'test@gmail.com'
+                    def liferayPassword = 'test'
+                    def siteId = '20117'  // Your site ID
+                    
+                    // Read the content of sample.html
+                    def newHtmlContent = readFile('sample.html')
+                    
+                    // JSON payload to create the new article
+                    def json = """
+                    {
+                        "title": "New Sample Article",
+                        "content": "$newHtmlContent",
+                        "siteId": "${siteId}"
+                    }
+                    """
+                    
+                    // Use curl to send the POST request to Liferay's Headless API
+                    sh "curl -u ${liferayUsername}:${liferayPassword} -X POST -H 'Content-Type: application/json' -d '${json}' ${liferayUrl}/o/headless-delivery/v1.0/web-content-articles"
+                }
+            }
+        }
+    }
+}
