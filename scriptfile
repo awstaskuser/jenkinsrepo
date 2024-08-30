@@ -28,7 +28,7 @@ pipeline {
                     """
                     
                     // Use curl to send the POST request to Liferay's Headless API
-                    sh "curl -u ${liferayUsername}:${liferayPassword} -X POST -H 'Content-Type: application/json' -d '${json}' ${liferayUrl}/o/headless-delivery/v1.0/web-content-articles"
+                    sh "curl -u ${liferayUsername}:${liferayPassword} -X POST -H 'Content-Type: application/json' -d '${json}' ${liferayUrl}/web/guest/sample"
                 }
             }
         }
